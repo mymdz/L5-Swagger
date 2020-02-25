@@ -222,4 +222,12 @@ class Generator
     {
         return version_compare($this->swaggerVersion, '3.0', '>=');
     }
+
+    /**
+     * @param string $docsFile
+     */
+    public function setDocsFile(string $docsFile): void
+    {
+        $this->docsFile = $docsFile;
+    }
 }
