@@ -42,7 +42,7 @@ class SwaggerController extends BaseController
 
         if (preg_match("/^api\-docs\-([1-9][0-9]*)\.json$/", $targetFile, $matches)) {
             Analysis::$requiredVersion = (int)$matches[1];
-            $this->generator->setDocsFile($targetFile);
+            $this->generator->setDocsFile(config('l5-swagger.paths.docs') . "/" . $targetFile);
             config(['l5-swagger.paths.docs_json' => $targetFile]);
         }
 
