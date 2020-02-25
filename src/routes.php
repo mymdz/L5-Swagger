@@ -4,7 +4,12 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'L5Swagger'], function (Router $router) {
-    $router->get(config('l5-swagger.routes.api'), [
+
+    if ($ver = config('l5-swagger.api.current_version')) {
+        $router->redirect(config('l5-swagger.routes.api'), "/" . config('l5-swagger.routes.api') . "/$ver");
+    }
+
+    $router->get(config('l5-swagger.routes.api') . "/{version?}", [
         'as' => 'l5-swagger.api',
         'middleware' => config('l5-swagger.routes.middleware.api', []),
         'uses' => '\L5Swagger\Http\Controllers\SwaggerController@api',

@@ -1,5 +1,5 @@
 {
-  "name": "darkaonline/l5-swagger",
+  "name": "mymdz/l5-swagger",
   "description": "Swagger integration to Laravel 5",
   "keywords": [
     "laravel",
@@ -11,12 +11,17 @@
     {
       "name": "Darius Matulionis",
       "email": "darius@matulionis.lt"
+    },
+    {
+      "name": "Denis Zadorozhny",
+      "email": "dz@autodoc.de",
+      "homepage": "https://autodoc.de"
     }
   ],
   "require": {
     "php": "^7.2",
     "laravel/framework": "^6.0",
-    "zircote/swagger-php": "~2.0|3.*",
+    "mymdz/swagger-php": "~2.0|3.*",
     "swagger-api/swagger-ui": "^3.0",
     "symfony/yaml": "^5.0"
   },
