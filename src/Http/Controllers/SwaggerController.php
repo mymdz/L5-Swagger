@@ -9,19 +9,10 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
+use OpenApi\Analysis;
 
 class SwaggerController extends BaseController
 {
-    /**
-     * @var L5Swagger\Generator
-     */
-    protected $generator;
-
-    public function __construct(Generator $generator)
-    {
-        $this->generator = $generator;
-    }
-
     /**
      * Dump api-docs content endpoint. Supports dumping a json, or yaml file.
      *
@@ -39,22 +30,19 @@ class SwaggerController extends BaseController
             $extension = explode('.', $file)[1];
         }
 
+        if (preg_match("/^api\-docs\-([1-9][0-9]*)\.json$/", $targetFile, $matches)) {
+            Analysis::$requiredVersion = (int)$matches[1];
+            config(['l5-swagger.paths.docs_json' => $targetFile]);
+        }
+
         $filePath = config('l5-swagger.paths.docs').'/'.$targetFile;
 
         if (config('l5-swagger.generate_always') || ! File::exists($filePath)) {
             try {
-                $this->generator->generateDocs();
+                Generator::generateDocs();
             } catch (\Exception $e) {
                 Log::error($e);
-
-                abort(
-                    404,
-                    sprintf(
-                        'Unable to generate documentation file to: "%s". Please make sure directory is writable. Error: %s',
-                        $filePath,
-                        $e->getMessage()
-                    )
-                );
+                throw $e;
             }
         }
 
@@ -77,13 +65,18 @@ class SwaggerController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function api()
+    public function api($version = null)
     {
         if ($proxy = config('l5-swagger.proxy')) {
             if (! is_array($proxy)) {
                 $proxy = [$proxy];
             }
             \Illuminate\Http\Request::setTrustedProxies($proxy, \Illuminate\Http\Request::HEADER_X_FORWARDED_ALL);
+        }
+
+        if ($version) {
+            $version = (int)preg_replace("/[^0-9]/", "", $version);
+            config(['l5-swagger.paths.docs_json' => "api-docs-$version.json"]);
         }
 
         // Need the / at the end to avoid CORS errors on Homestead systems.
