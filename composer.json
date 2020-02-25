@@ -18,10 +18,16 @@
       "homepage": "https://autodoc.de"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/mymdz/swagger-php"
+    }
+  ],
   "require": {
     "php": "^7.2",
     "laravel/framework": "^6.0",
-    "mymdz/swagger-php": "~2.0|3.*",
+    "mymdz/swagger-php": "dev-versioning",
     "swagger-api/swagger-ui": "^3.0",
     "symfony/yaml": "^5.0"
   },
